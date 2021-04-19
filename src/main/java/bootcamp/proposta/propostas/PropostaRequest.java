@@ -39,11 +39,15 @@ public class PropostaRequest {
                            @NotBlank String endereco,
                            @NotNull @DecimalMin(value = "0.00") BigDecimal salario) {
 
-        this.documento = documento;
+        this.documento = Proposta.formataDocumento(documento);
         this.email = email;
         this.nome = nome;
         this.endereco = endereco;
         this.salario = salario;
+    }
+
+    public String getDocumento() {
+        return documento;
     }
 
     public Proposta converte() {

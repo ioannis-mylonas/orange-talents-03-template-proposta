@@ -43,7 +43,7 @@ public class Proposta {
                     @NotBlank String endereco,
                     @NotNull @DecimalMin(value = "0.00") BigDecimal salario) {
 
-        this.documento = documento;
+        this.documento = formataDocumento(documento);
         this.email = email;
         this.nome = nome;
         this.endereco = endereco;
@@ -52,5 +52,10 @@ public class Proposta {
 
     public Long getId() {
         return id;
+    }
+
+    public static String formataDocumento(String documento) {
+        if (documento == null) return null;
+        return documento.replaceAll("[./-]", "");
     }
 }

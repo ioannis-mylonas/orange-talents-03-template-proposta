@@ -86,9 +86,25 @@ class PropostaControllerTest {
                 "Rua dos testes, n.0", BigDecimal.valueOf(0.00));
         entityManager.persist(proposta);
 
-        String json = mapper.writeValueAsString(proposta);
         mvc.perform(get("/propostas/{id}", proposta.getId()))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    @WithMockUser(roles = {"user"})
+    @Transactional @Rollback
+    public void testaPostPropostaDocumentoExistenteUnprocessable() throws Exception {
+        PropostaRequest proposta = new PropostaRequest("296.271.840-04",
+                "outro@email.test", "Teste",
+                "Rua dos testes, n.0", BigDecimal.valueOf(0.00));
+        entityManager.persist(proposta.converte());
+
+        String json = mapper.writeValueAsString(proposta);
+        mvc.perform(post("/propostas")
+                .contentType(APPLICATION_JSON)
+                .content(json))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isUnprocessableEntity());
     }
 }
