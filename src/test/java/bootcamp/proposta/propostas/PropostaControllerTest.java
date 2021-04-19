@@ -12,6 +12,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -39,6 +40,7 @@ class PropostaControllerTest {
     private final ObjectMapper mapper = new ObjectMapper();
 
     @Test
+    @WithMockUser(roles = {"user"})
     public void testaPostSucesso() throws Exception {
         PropostaRequest request = new PropostaRequest("775.907.210-42",
                 "teste@cliente.com", "Cliente",
@@ -54,6 +56,7 @@ class PropostaControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = {"user"})
     public void testaPostFalha() throws Exception {
         PropostaRequest request = new PropostaRequest("",
                 "", "", "", BigDecimal.valueOf(0.00));
@@ -67,6 +70,7 @@ class PropostaControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = {"user"})
     public void testaGetPropostaInexistenteNotFound() throws Exception {
         mvc.perform(get("/propostas/1"))
                 .andDo(MockMvcResultHandlers.print())
@@ -74,6 +78,7 @@ class PropostaControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = {"user"})
     @Transactional @Rollback
     public void testaGetPropostaExistenteSucesso() throws Exception {
         Proposta proposta = new Proposta("296.271.840-04",
