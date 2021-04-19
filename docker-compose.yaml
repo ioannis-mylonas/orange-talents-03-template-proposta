@@ -1,0 +1,67 @@
+version: '3.8'
+services:
+  db:
+    image: mysql:8.0.23
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+      MYSQL_DATABASE: keycloak
+      MYSQL_USER: keycloak
+      MYSQL_PASSWORD: pass
+    volumes:
+    - db-volume:/var/lib/mysql
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:12.0.4
+    ports:
+      - 4040:8080
+    environment:
+      DB_VENDOR: mysql
+      DB_ADDR: db
+      DB_PORT: 3306
+      DB_USER: keycloak
+      DB_PASSWORD: pass
+      KEYCLOAK_USER: admin
+      KEYCLOAK_PASSWORD: admin
+      KEYCLOAK_FRONTEND_URL: http://localhost:4040/auth
+    depends_on:
+      - "db"
+
+  jaeger:
+    image: jaegertracing/all-in-one
+    restart: always
+    ports:
+      - 16686:16686
+    environment:
+      COLLECTOR_ZIPKIN_HTTP_PORT: 9411
+
+  adminer:
+    image: adminer:4.8.0-standalone
+    restart: always
+    ports:
+      - 3030:8080
+
+  proposta:
+    build:
+      context: .
+    image: ioannism/proposta
+    ports:
+      - 8080:8080
+    environment:
+      DB_URL: db:3306/proposta?autoReconnect=true&createDatabaseIfNotExist=true
+      DB_USER: root
+      DB_PASS: example
+      KEYCLOAK_HOST: keycloak
+      KEYCLOAK_PORT: 8080
+      KEYCLOAK_REALM: Master
+      KEYCLOAK_CLIENT: proposta
+      ENABLE_JAEGER: "true"
+      JAEGER_ENDPOINT: http://jaeger:14268/api/traces
+      JAEGER_SAMPLE: 1
+    depends_on:
+      - "db"
+      - "keycloak"
+      - "jaeger"
+
+volumes:
+  db-volume:
