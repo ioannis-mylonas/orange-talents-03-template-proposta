@@ -1,5 +1,6 @@
 package bootcamp.proposta.propostas;
 
+import bootcamp.proposta.exceptions.ApiError;
 import bootcamp.proposta.propostas.health.PropostaCounter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +31,7 @@ public class PropostaController {
                                       UriComponentsBuilder uriComponentsBuilder) {
 
         if (propostaRepository.existsByDocumento(request.getDocumento()))
-            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
+            throw new ApiError(HttpStatus.UNPROCESSABLE_ENTITY, "Não foi possível processar o pedido.");
 
         Proposta proposta = request.converte();
         propostaRepository.save(proposta);
