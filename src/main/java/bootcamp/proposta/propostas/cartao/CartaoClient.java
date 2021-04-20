@@ -10,5 +10,5 @@ import org.springframework.web.bind.annotation.RequestParam;
         configuration = {FeignTracingAutoConfiguration.class})
 public interface CartaoClient {
     @GetMapping("/api/cartoes")
-    public CartaoResponse consulta(@RequestParam(name = "idProposta") Long idProposta);
+    CartaoResponse consulta(@RequestParam(name = "idProposta") Long idProposta);
 }

@@ -51,6 +51,7 @@ public class PropostaRequest {
     }
 
     public Proposta converte() {
-        return new Proposta(documento, email, nome, endereco, salario);
+        return new Proposta(documento, email, nome,
+                endereco, salario, EstadoProposta.ANALISE);
     }
 }

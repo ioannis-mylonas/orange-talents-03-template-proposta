@@ -44,13 +44,15 @@ public class Proposta {
                     @NotBlank @Email String email,
                     @NotBlank String nome,
                     @NotBlank String endereco,
-                    @NotNull @DecimalMin(value = "0.00") BigDecimal salario) {
+                    @NotNull @DecimalMin(value = "0.00") BigDecimal salario,
+                    EstadoProposta estadoProposta) {
 
         this.documento = formataDocumento(documento);
         this.email = email;
         this.nome = nome;
         this.endereco = endereco;
         this.salario = salario;
+        this.estadoProposta = estadoProposta;
     }
 
     public Long getId() {
@@ -63,6 +65,10 @@ public class Proposta {
 
     public String getNome() {
         return nome;
+    }
+
+    public EstadoProposta getEstadoProposta() {
+        return estadoProposta;
     }
 
     public void atualiza(EstadoProposta estadoProposta) {

@@ -38,7 +38,8 @@ public class PropostaController {
         span.log("Cadastrando proposta...");
 
         if (propostaRepository.existsByDocumento(request.getDocumento()))
-            throw new ApiError(HttpStatus.UNPROCESSABLE_ENTITY, "Não foi possível processar o pedido.");
+            throw new ApiError(HttpStatus.UNPROCESSABLE_ENTITY,
+                    "Não foi possível processar o pedido.");
 
         Proposta proposta = request.converte();
         proposta = propostaRepository.save(proposta);
@@ -53,10 +54,11 @@ public class PropostaController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> detalhes(@PathVariable(name = "id") Long id) {
+    public ResponseEntity<PropostaResponse> detalhes(@PathVariable(name = "id") Long id) {
         Optional<Proposta> proposta = propostaRepository.findById(id);
         if (proposta.isEmpty()) return ResponseEntity.notFound().build();
 
-        return ResponseEntity.ok(proposta.get());
+        PropostaResponse response = new PropostaResponse(proposta.get());
+        return ResponseEntity.ok(response);
     }
 }

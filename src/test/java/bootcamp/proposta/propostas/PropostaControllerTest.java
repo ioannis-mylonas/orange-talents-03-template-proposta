@@ -83,7 +83,9 @@ class PropostaControllerTest {
     public void testaGetPropostaExistenteSucesso() throws Exception {
         Proposta proposta = new Proposta("296.271.840-04",
                 "outro@email.test", "Teste",
-                "Rua dos testes, n.0", BigDecimal.valueOf(0.00));
+                "Rua dos testes, n.0", BigDecimal.valueOf(0.00),
+                EstadoProposta.ANALISE);
+
         entityManager.persist(proposta);
 
         mvc.perform(get("/propostas/{id}", proposta.getId()))
