@@ -31,6 +31,8 @@ public class Proposta {
     @DecimalMin(value = "0.00")
     @Column(nullable = false)
     private BigDecimal salario;
+    @Enumerated(EnumType.STRING)
+    private EstadoProposta estadoProposta;
 
     /**
      * @Deprecated Apenas para uso do Hibernate
@@ -52,6 +54,18 @@ public class Proposta {
 
     public Long getId() {
         return id;
+    }
+
+    public String getDocumento() {
+        return documento;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void atualiza(EstadoProposta estadoProposta) {
+        this.estadoProposta = estadoProposta;
     }
 
     public static String formataDocumento(String documento) {
