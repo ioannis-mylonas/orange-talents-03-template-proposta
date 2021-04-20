@@ -33,6 +33,7 @@ public class Proposta {
     private BigDecimal salario;
     @Enumerated(EnumType.STRING)
     private EstadoProposta estadoProposta;
+    private String cartaoId;
 
     /**
      * @Deprecated Apenas para uso do Hibernate
@@ -66,6 +67,10 @@ public class Proposta {
 
     public void atualiza(EstadoProposta estadoProposta) {
         this.estadoProposta = estadoProposta;
+    }
+
+    public void adicionaCartao(String cartaoId) {
+        this.cartaoId = cartaoId;
     }
 
     public static String formataDocumento(String documento) {
