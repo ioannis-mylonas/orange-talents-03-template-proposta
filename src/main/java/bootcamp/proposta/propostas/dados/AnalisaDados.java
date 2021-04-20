@@ -2,6 +2,7 @@ package bootcamp.proposta.propostas.dados;
 
 import bootcamp.proposta.propostas.Proposta;
 import bootcamp.proposta.propostas.events.PropostaCriadaEvent;
+import feign.FeignException;
 import io.opentracing.Span;
 import io.opentracing.Tracer;
 import org.springframework.context.ApplicationListener;
@@ -28,10 +29,16 @@ public class AnalisaDados implements ApplicationListener<PropostaCriadaEvent> {
         span.setTag("proposta", proposta.getId());
         span.log("Consultando proposta...");
 
+        ElegibilidadeDados elegibilidade;
         AnaliseRequest request = new AnaliseRequest(proposta);
-        AnaliseResponse response = client.consulta(request);
 
-        ElegibilidadeDados elegibilidade = response.getResultadoSolicitacao();
+        try {
+            AnaliseResponse response = client.consulta(request);
+            elegibilidade = response.getResultadoSolicitacao();
+        } catch(FeignException.UnprocessableEntity ex) {
+            elegibilidade = ElegibilidadeDados.COM_RESTRICAO;
+        }
+
         proposta.atualiza(elegibilidade.getEstadoProposta());
 
         span.log("Consulta de proposta finalizada.");
