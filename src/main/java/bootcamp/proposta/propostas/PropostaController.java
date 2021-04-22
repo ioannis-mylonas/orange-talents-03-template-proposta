@@ -15,7 +15,7 @@ import java.net.URI;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/propostas")
+@RequestMapping("/api/propostas")
 public class PropostaController {
     private final PropostaRepository propostaRepository;
     private final PropostaEventPublisher eventPublisher;

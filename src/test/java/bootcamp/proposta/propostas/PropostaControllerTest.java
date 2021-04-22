@@ -3,31 +3,23 @@ package bootcamp.proposta.propostas;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureDataJpa;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureWebMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
-import java.net.URI;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.springframework.http.MediaType.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -47,7 +39,7 @@ class PropostaControllerTest {
                 "Rua dos testes, n.0", BigDecimal.valueOf(0.00));
         String json = mapper.writeValueAsString(request);
 
-        mvc.perform(post("/propostas")
+        mvc.perform(post("/api/propostas")
                 .contentType(APPLICATION_JSON)
                 .content(json))
                 .andDo(MockMvcResultHandlers.print())
@@ -62,7 +54,7 @@ class PropostaControllerTest {
                 "", "", "", BigDecimal.valueOf(0.00));
         String json = mapper.writeValueAsString(request);
 
-        mvc.perform(post("/propostas")
+        mvc.perform(post("/api/propostas")
                 .contentType(APPLICATION_JSON)
                 .content(json))
                 .andDo(MockMvcResultHandlers.print())
@@ -72,7 +64,7 @@ class PropostaControllerTest {
     @Test
     @WithMockUser(roles = {"user"})
     public void testaGetPropostaInexistenteNotFound() throws Exception {
-        mvc.perform(get("/propostas/1"))
+        mvc.perform(get("/api/propostas/1"))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
@@ -88,7 +80,7 @@ class PropostaControllerTest {
 
         entityManager.persist(proposta);
 
-        mvc.perform(get("/propostas/{id}", proposta.getId()))
+        mvc.perform(get("/api/propostas/{id}", proposta.getId()))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
@@ -103,7 +95,7 @@ class PropostaControllerTest {
         entityManager.persist(proposta.converte());
 
         String json = mapper.writeValueAsString(proposta);
-        mvc.perform(post("/propostas")
+        mvc.perform(post("/api/propostas")
                 .contentType(APPLICATION_JSON)
                 .content(json))
                 .andDo(MockMvcResultHandlers.print())

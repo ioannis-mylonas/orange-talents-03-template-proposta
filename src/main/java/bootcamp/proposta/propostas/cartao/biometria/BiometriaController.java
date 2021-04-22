@@ -11,6 +11,7 @@ import javax.validation.Valid;
 import java.net.URI;
 
 @RestController
+@RequestMapping("/api/cartoes")
 public class BiometriaController {
     private final PropostaRepository propostaRepository;
     private final EntityManager entityManager;
@@ -22,9 +23,9 @@ public class BiometriaController {
         this.entityManager = entityManager;
     }
 
-    @PostMapping("/cartoes/{id}/biometria")
+    @PostMapping("/{cartaoId}/biometrias")
     @Transactional
-    public ResponseEntity<?> cadastra(@PathVariable(name = "id") String cartaoId,
+    public ResponseEntity<?> cadastra(@PathVariable(name = "cartaoId") String cartaoId,
                                       @RequestBody @Valid BiometriaRequest request,
                                       UriComponentsBuilder uriBuilder) {
 
@@ -35,14 +36,14 @@ public class BiometriaController {
         entityManager.persist(biometria);
 
         URI uri = uriBuilder
-                .path("/cartoes/{cartaoId}/biometria/{id}")
+                .path("/api/cartoes/{cartaoId}/biometrias/{id}")
                 .buildAndExpand(cartaoId, biometria.getId())
                 .toUri();
 
         return ResponseEntity.created(uri).build();
     }
 
-    @GetMapping("/cartoes/{cartaoId}/biometria/{id}")
+    @GetMapping("/{cartaoId}/biometrias/{id}")
     public ResponseEntity<Biometria> detalhes(
             @PathVariable(name = "cartaoId") String cartaoId,
             @PathVariable(name = "id") Long id) {
