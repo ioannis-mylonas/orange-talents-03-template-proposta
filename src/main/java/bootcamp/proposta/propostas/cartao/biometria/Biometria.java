@@ -4,6 +4,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Entity
@@ -17,7 +18,7 @@ public class Biometria {
 
     @Lob
     @Basic(fetch = FetchType.LAZY)
-    @NotBlank
+    @NotNull
     @Column(nullable = false)
     private byte[] biometria;
 

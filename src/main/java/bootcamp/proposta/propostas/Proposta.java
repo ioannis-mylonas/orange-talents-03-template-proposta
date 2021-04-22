@@ -71,6 +71,10 @@ public class Proposta {
         return estadoProposta;
     }
 
+    public String getCartaoId() {
+        return cartaoId;
+    }
+
     public void atualiza(EstadoProposta estadoProposta) {
         this.estadoProposta = estadoProposta;
     }

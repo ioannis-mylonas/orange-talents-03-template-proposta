@@ -7,9 +7,12 @@ public class PropostaResponse {
     private final String nome;
     @JsonProperty
     private final EstadoProposta estado;
+    @JsonProperty
+    private final String cartaoId;
 
     public PropostaResponse(Proposta proposta) {
         this.nome = proposta.getNome();
         this.estado = proposta.getEstadoProposta();
+        this.cartaoId = proposta.getCartaoId();
     }
 }

@@ -1,17 +1,15 @@
 package bootcamp.proposta.propostas.cartao.biometria;
 
-import bootcamp.proposta.validators.IsBase64;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 public class BiometriaRequest {
     @JsonProperty
-    @NotBlank
-    @IsBase64
-    private final byte[] biometria;
+    @NotNull
+    private byte[] biometria;
 
-    public BiometriaRequest(@NotBlank byte[] biometria) {
+    public void setBiometria(byte[] biometria) {
         this.biometria = biometria;
     }
 
