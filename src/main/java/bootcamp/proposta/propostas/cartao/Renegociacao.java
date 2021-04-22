@@ -1,22 +1,23 @@
-package bootcamp.proposta.propostas.cartao.request;
+package bootcamp.proposta.propostas.cartao;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
+import javax.persistence.Entity;
+import javax.persistence.Id;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+@Entity
 public class Renegociacao {
-    @JsonProperty
-    private final String id;
+    @Id
+    private String id;
 
-    @JsonProperty
-    private final int quantidade;
+    private int quantidade;
+    private BigDecimal valor;
+    private LocalDateTime dataDeCriacao;
 
-    @JsonProperty
-    private final BigDecimal valor;
-
-    @JsonProperty
-    private final LocalDateTime dataDeCriacao;
+    /**
+     * @Deprecated Para uso do Hibernate
+     */
+    public Renegociacao() {}
 
     public Renegociacao(String id, int quantidade, BigDecimal valor, LocalDateTime dataDeCriacao) {
         this.id = id;

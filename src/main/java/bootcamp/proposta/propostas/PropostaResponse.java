@@ -1,5 +1,6 @@
 package bootcamp.proposta.propostas;
 
+import bootcamp.proposta.propostas.cartao.CartaoResponse;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class PropostaResponse {
@@ -8,11 +9,11 @@ public class PropostaResponse {
     @JsonProperty
     private final EstadoProposta estado;
     @JsonProperty
-    private final String cartaoId;
+    private final CartaoResponse cartao;
 
     public PropostaResponse(Proposta proposta) {
         this.nome = proposta.getNome();
         this.estado = proposta.getEstadoProposta();
-        this.cartaoId = proposta.getCartaoId();
+        this.cartao = new CartaoResponse(proposta.getCartao());
     }
 }

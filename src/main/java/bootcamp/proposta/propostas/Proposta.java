@@ -1,5 +1,6 @@
 package bootcamp.proposta.propostas;
 
+import bootcamp.proposta.propostas.cartao.Cartao;
 import bootcamp.proposta.validators.Documento;
 
 import javax.persistence.*;
@@ -33,7 +34,9 @@ public class Proposta {
     private BigDecimal salario;
     @Enumerated(EnumType.STRING)
     private EstadoProposta estadoProposta;
-    private String cartaoId;
+    @OneToOne(cascade = CascadeType.MERGE)
+    @JoinColumn
+    private Cartao cartao;
 
     /**
      * @Deprecated Apenas para uso do Hibernate
@@ -71,16 +74,16 @@ public class Proposta {
         return estadoProposta;
     }
 
-    public String getCartaoId() {
-        return cartaoId;
+    public Cartao getCartao() {
+        return cartao;
     }
 
     public void atualiza(EstadoProposta estadoProposta) {
         this.estadoProposta = estadoProposta;
     }
 
-    public void adicionaCartao(String cartaoId) {
-        this.cartaoId = cartaoId;
+    public void adicionaCartao(Cartao cartao) {
+        this.cartao = cartao;
     }
 
     public static String formataDocumento(String documento) {

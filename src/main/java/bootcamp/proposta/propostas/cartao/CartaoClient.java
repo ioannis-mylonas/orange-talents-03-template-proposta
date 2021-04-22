@@ -1,6 +1,6 @@
 package bootcamp.proposta.propostas.cartao;
 
-import bootcamp.proposta.propostas.cartao.request.CartaoResponse;
+import bootcamp.proposta.propostas.cartao.request.CartaoServiceResponse;
 import io.opentracing.contrib.spring.cloud.feign.FeignTracingAutoConfiguration;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,5 +10,5 @@ import org.springframework.web.bind.annotation.RequestParam;
         configuration = {FeignTracingAutoConfiguration.class})
 public interface CartaoClient {
     @GetMapping("/api/cartoes")
-    CartaoResponse consulta(@RequestParam(name = "idProposta") Long idProposta);
+    CartaoServiceResponse consulta(@RequestParam(name = "idProposta") Long idProposta);
 }

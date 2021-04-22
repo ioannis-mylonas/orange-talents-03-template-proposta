@@ -1,6 +1,7 @@
 package bootcamp.proposta.propostas.cartao.biometria;
 
 import bootcamp.proposta.propostas.PropostaRepository;
+import bootcamp.proposta.propostas.cartao.Cartao;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -13,13 +14,9 @@ import java.net.URI;
 @RestController
 @RequestMapping("/api/cartoes")
 public class BiometriaController {
-    private final PropostaRepository propostaRepository;
     private final EntityManager entityManager;
 
-    public BiometriaController(PropostaRepository propostaRepository,
-                               EntityManager entityManager) {
-
-        this.propostaRepository = propostaRepository;
+    public BiometriaController(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
 
@@ -29,11 +26,12 @@ public class BiometriaController {
                                       @RequestBody @Valid BiometriaRequest request,
                                       UriComponentsBuilder uriBuilder) {
 
-        if (!propostaRepository.existsByCartaoId(cartaoId))
-            return ResponseEntity.notFound().build();
+        Cartao cartao = entityManager.find(Cartao.class, cartaoId);
+        if (cartao == null) return ResponseEntity.notFound().build();
 
-        Biometria biometria = request.converte(cartaoId);
+        Biometria biometria = request.converte();
         entityManager.persist(biometria);
+        cartao.addBiometria(biometria);
 
         URI uri = uriBuilder
                 .path("/api/cartoes/{cartaoId}/biometrias/{id}")
@@ -44,15 +42,14 @@ public class BiometriaController {
     }
 
     @GetMapping("/{cartaoId}/biometrias/{id}")
+    @Transactional
     public ResponseEntity<Biometria> detalhes(
             @PathVariable(name = "cartaoId") String cartaoId,
             @PathVariable(name = "id") Long id) {
 
-        if (!propostaRepository.existsByCartaoId(cartaoId))
-            return ResponseEntity.notFound().build();
-
+        Cartao cartao = entityManager.find(Cartao.class, cartaoId);
         Biometria biometria = entityManager.find(Biometria.class, id);
-        if (biometria == null)
+        if (biometria == null || cartao == null)
             return ResponseEntity.notFound().build();
 
         return ResponseEntity.ok(biometria);

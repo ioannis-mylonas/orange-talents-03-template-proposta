@@ -1,18 +1,21 @@
-package bootcamp.proposta.propostas.cartao.request;
+package bootcamp.proposta.propostas.cartao;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
+import javax.persistence.Entity;
+import javax.persistence.Id;
 import java.math.BigDecimal;
 
+@Entity
 public class Parcela {
-    @JsonProperty
-    private final String id;
+    @Id
+    private String id;
 
-    @JsonProperty
-    private final int quantidade;
+    private int quantidade;
+    private BigDecimal valor;
 
-    @JsonProperty
-    private final BigDecimal valor;
+    /**
+     * @Deprecated Para uso do Hibernate
+     */
+    public Parcela() {}
 
     public Parcela(String id, int quantidade, BigDecimal valor) {
         this.id = id;

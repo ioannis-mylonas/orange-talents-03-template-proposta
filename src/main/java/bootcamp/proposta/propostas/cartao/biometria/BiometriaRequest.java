@@ -13,7 +13,7 @@ public class BiometriaRequest {
         this.biometria = biometria;
     }
 
-    public Biometria converte(String idCartao) {
-        return new Biometria(idCartao, biometria);
+    public Biometria converte() {
+        return new Biometria(biometria);
     }
 }

@@ -3,7 +3,6 @@ package bootcamp.proposta.propostas.cartao.biometria;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
@@ -11,10 +10,6 @@ import java.time.LocalDateTime;
 public class Biometria {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @NotBlank
-    @Column(nullable = false)
-    private String idCartao;
 
     @Lob
     @Basic(fetch = FetchType.LAZY)
@@ -31,8 +26,7 @@ public class Biometria {
      */
     public Biometria() {}
 
-    public Biometria(String idCartao, byte[] biometria) {
-        this.idCartao = idCartao;
+    public Biometria(byte[] biometria) {
         this.biometria = biometria;
     }
 
