@@ -1,5 +1,6 @@
 package bootcamp.proposta.propostas.cartao;
 
+import bootcamp.proposta.propostas.cartao.aviso.AvisoViagem;
 import bootcamp.proposta.propostas.cartao.biometria.Biometria;
 import bootcamp.proposta.propostas.cartao.bloqueio.ClienteBloqueio;
 
@@ -42,6 +43,9 @@ public class Cartao {
 
     @OneToOne(cascade = CascadeType.MERGE, mappedBy = "cartao")
     private ClienteBloqueio bloqueiosCliente;
+
+    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "cartao")
+    private Set<AvisoViagem> avisosViagem = new HashSet<>();
 
     @Enumerated(EnumType.STRING)
     private CartaoEstado estado;
@@ -120,6 +124,10 @@ public class Cartao {
 
     public void addBiometria(Biometria biometria) {
         biometrias.add(biometria);
+    }
+
+    public void addAvisoViagem(AvisoViagem avisoViagem) {
+        this.avisosViagem.add(avisoViagem);
     }
 
     public void bloqueia(ClienteBloqueio bloqueio) {
