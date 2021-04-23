@@ -18,16 +18,15 @@ import java.util.Optional;
 @RequestMapping("/api/propostas")
 public class PropostaController {
     private final PropostaRepository propostaRepository;
-    private final PropostaEventPublisher eventPublisher;
     private final Tracer tracer;
+    private final PropostaEventPublisher eventPublisher;
 
     public PropostaController(PropostaRepository propostaRepository,
-                              PropostaEventPublisher eventPublisher,
-                              Tracer tracer) {
+                              Tracer tracer, PropostaEventPublisher eventPublisher) {
 
         this.propostaRepository = propostaRepository;
-        this.eventPublisher = eventPublisher;
         this.tracer = tracer;
+        this.eventPublisher = eventPublisher;
     }
 
     @PostMapping
