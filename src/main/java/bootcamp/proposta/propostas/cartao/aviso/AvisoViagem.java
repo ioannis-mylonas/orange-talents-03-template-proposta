@@ -53,4 +53,32 @@ public class AvisoViagem {
         this.ip = ip;
         this.userAgent = userAgent;
     }
+
+    public Long getId() {
+        return id;
+    }
+
+    public Cartao getCartao() {
+        return cartao;
+    }
+
+    public String getDestino() {
+        return destino;
+    }
+
+    public LocalDate getTermino() {
+        return termino;
+    }
+
+    public String getIp() {
+        return ip;
+    }
+
+    public String getUserAgent() {
+        return userAgent;
+    }
+
+    public LocalDateTime getCriacao() {
+        return criacao;
+    }
 }
