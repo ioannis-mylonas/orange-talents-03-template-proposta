@@ -19,7 +19,7 @@ public class ClienteBloqueioController {
         this.entityManager = entityManager;
     }
 
-    @PostMapping("/api/cartoes/{id}/bloqueio")
+    @PostMapping("/api/cartoes/{id}/bloqueios")
     @Transactional
     public ResponseEntity<?> bloqueia(@PathVariable(name = "id") String cartaoId,
                                       @RequestHeader("User-Agent") String userAgent,

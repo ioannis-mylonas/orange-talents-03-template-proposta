@@ -2,7 +2,6 @@ package bootcamp.proposta.propostas.cartao.bloqueio;
 
 import bootcamp.proposta.propostas.cartao.Cartao;
 import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.security.core.userdetails.User;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -23,7 +22,7 @@ public class ClienteBloqueio {
     @NotBlank
     private String ip;
 
-    @NotNull
+    @NotBlank
     private String userAgent;
 
     /**
