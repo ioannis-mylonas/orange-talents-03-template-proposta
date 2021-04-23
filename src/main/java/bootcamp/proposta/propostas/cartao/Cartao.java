@@ -1,6 +1,7 @@
 package bootcamp.proposta.propostas.cartao;
 
 import bootcamp.proposta.propostas.cartao.biometria.Biometria;
+import bootcamp.proposta.propostas.cartao.bloqueio.ClienteBloqueio;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -38,6 +39,9 @@ public class Cartao {
     @OneToMany(cascade = CascadeType.MERGE)
     @JoinColumn
     private Set<Biometria> biometrias = new HashSet<>();
+
+    @OneToOne(cascade = CascadeType.MERGE, mappedBy = "cartao")
+    private ClienteBloqueio bloqueiosCliente;
 
     /**
      * @Deprecated Para uso do Hibernate
@@ -101,7 +105,19 @@ public class Cartao {
         return vencimento;
     }
 
+    public Set<Biometria> getBiometrias() {
+        return biometrias;
+    }
+
+    public ClienteBloqueio getBloqueiosCliente() {
+        return bloqueiosCliente;
+    }
+
     public void addBiometria(Biometria biometria) {
         biometrias.add(biometria);
+    }
+
+    public void bloqueia(ClienteBloqueio bloqueio) {
+        this.bloqueiosCliente = bloqueio;
     }
 }

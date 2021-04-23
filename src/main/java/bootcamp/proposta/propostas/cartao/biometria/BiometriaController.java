@@ -1,6 +1,5 @@
 package bootcamp.proposta.propostas.cartao.biometria;
 
-import bootcamp.proposta.propostas.PropostaRepository;
 import bootcamp.proposta.propostas.cartao.Cartao;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
