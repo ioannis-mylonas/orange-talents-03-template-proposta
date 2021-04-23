@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletRequest;
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 @RestController
@@ -16,7 +17,8 @@ public class AvisoViagemController {
         this.entityManager = entityManager;
     }
 
-    @PostMapping("/cartoes/{id}/aviso")
+    @PostMapping("/api/cartoes/{id}/avisos")
+    @Transactional
     public ResponseEntity<?> avisa(@PathVariable(name = "id") String id,
                                    @RequestBody @Valid AvisoViagemRequest viagemRequest,
                                    @RequestHeader("User-Agent") String userAgent,

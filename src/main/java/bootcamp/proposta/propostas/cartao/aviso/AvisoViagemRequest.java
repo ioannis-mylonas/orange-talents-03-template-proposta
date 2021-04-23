@@ -20,13 +20,10 @@ public class AvisoViagemRequest {
     @JsonFormat(pattern = "dd/MM/yyyy", shape = JsonFormat.Shape.STRING)
     private LocalDate termino;
 
-    @NotBlank
     public void setDestino(String destino) {
         this.destino = destino;
     }
 
-    @NotNull
-    @FutureOrPresent
     @JsonFormat(pattern = "dd/MM/yyyy", shape = JsonFormat.Shape.STRING)
     public void setTermino(LocalDate termino) {
         this.termino = termino;
