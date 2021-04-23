@@ -70,8 +70,10 @@ services:
     image: prom/prometheus
     volumes:
       - prometheus-volume:/etc/prometheus/
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
     ports:
       - 9090:9090
+    command: --config.file=/etc/prometheus/prometheus.yml
 
   grafana:
     image: grafana/grafana
