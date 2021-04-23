@@ -90,6 +90,6 @@ public class CartaoServiceResponse {
 
         return new Cartao(id, emitidoEm, titular,
                 bloqueios, avisos, carteiras, parcelas,
-                limite, renegociacao, vencimento);
+                limite, renegociacao, vencimento, CartaoEstado.NORMAL);
     }
 }

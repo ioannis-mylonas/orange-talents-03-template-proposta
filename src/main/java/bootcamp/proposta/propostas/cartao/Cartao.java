@@ -43,6 +43,9 @@ public class Cartao {
     @OneToOne(cascade = CascadeType.MERGE, mappedBy = "cartao")
     private ClienteBloqueio bloqueiosCliente;
 
+    @Enumerated(EnumType.STRING)
+    private CartaoEstado estado;
+
     /**
      * @Deprecated Para uso do Hibernate
      */
@@ -51,7 +54,8 @@ public class Cartao {
     public Cartao(String id, LocalDateTime emitidoEm, String titular,
                   List<Bloqueio> bloqueios, List<Aviso> avisos,
                   List<Carteira> carteiras, List<Parcela> parcelas,
-                  int limite, Renegociacao renegociacao, Vencimento vencimento) {
+                  int limite, Renegociacao renegociacao, Vencimento vencimento,
+                  CartaoEstado estado) {
 
         this.id = id;
         this.emitidoEm = emitidoEm;
@@ -63,6 +67,7 @@ public class Cartao {
         this.limite = limite;
         this.renegociacao = renegociacao;
         this.vencimento = vencimento;
+        this.estado = estado;
     }
 
     public String getId() {
@@ -119,5 +124,9 @@ public class Cartao {
 
     public void bloqueia(ClienteBloqueio bloqueio) {
         this.bloqueiosCliente = bloqueio;
+    }
+
+    public void mudaEstado(CartaoEstado estado) {
+        this.estado = estado;
     }
 }

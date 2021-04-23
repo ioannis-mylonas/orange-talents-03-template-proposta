@@ -31,7 +31,7 @@ public class AtualizaCartoes {
     @Transactional
     public void atualiza() {
         List<Proposta> propostas = propostaRepository
-                .findByCartaoAndEstadoProposta(null, EstadoProposta.ELEGIVEL);
+                .findByCartaoNullAndEstadoProposta(EstadoProposta.ELEGIVEL);
 
         for (Proposta proposta : propostas) {
             CartaoServiceResponse response = client.consulta(proposta.getId());
