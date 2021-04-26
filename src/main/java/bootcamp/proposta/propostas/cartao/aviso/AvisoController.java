@@ -1,5 +1,6 @@
 package bootcamp.proposta.propostas.cartao.aviso;
 
+import bootcamp.proposta.exceptions.ApiError;
 import bootcamp.proposta.propostas.cartao.Cartao;
 import bootcamp.proposta.propostas.cartao.CartaoClient;
 import bootcamp.proposta.propostas.cartao.aviso.notificacao.ClientAvisoViagemRequest;
@@ -46,10 +47,10 @@ public class AvisoController {
             return ResponseEntity.created(uri).build();
         } catch (FeignException.UnprocessableEntity ex) {
             ex.printStackTrace();
-            return ResponseEntity.unprocessableEntity().build();
+            throw new ApiError(HttpStatus.UNPROCESSABLE_ENTITY, "Não foi possível processar o pedido.");
         } catch (FeignException.FeignClientException ex) {
             ex.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            throw new ApiError(HttpStatus.INTERNAL_SERVER_ERROR, "Erro no processamento do pedido, por favor tente novamente mais tarde.");
         }
     }
 

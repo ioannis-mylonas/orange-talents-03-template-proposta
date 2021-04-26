@@ -1,5 +1,6 @@
 package bootcamp.proposta.propostas.cartao.carteira;
 
+import bootcamp.proposta.exceptions.ApiError;
 import bootcamp.proposta.propostas.cartao.Cartao;
 import bootcamp.proposta.propostas.cartao.CartaoClient;
 import feign.FeignException;
@@ -41,35 +42,34 @@ public class CarteiraController {
             return ResponseEntity.notFound().build();
 
         if (repository.existsByCartaoAndCarteira(cartao, request.getCarteira()))
-            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
+            throw new ApiError(HttpStatus.UNPROCESSABLE_ENTITY, "Não foi possível processar o pedido.");
 
-        try {
-            ClientCarteiraResponse response = client.associa(id, request);
-            return processa(response, request, cartao, uriBuilder);
-        } catch (FeignException.FeignClientException.UnprocessableEntity ex) {
-            ex.printStackTrace();
-            return ResponseEntity.unprocessableEntity().build();
-        } catch (FeignException.FeignClientException ex) {
-            ex.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        return processa(request, cartao, uriBuilder);
     }
 
-    public ResponseEntity<?> processa(ClientCarteiraResponse response,
-                                     ClientCarteiraRequest request,
+    public ResponseEntity<?> processa(ClientCarteiraRequest request,
                                       Cartao cartao,
-                                      UriComponentsBuilder uriBuilder) {
+                                      UriComponentsBuilder uriBuilder) throws ApiError {
+        try {
+            ClientCarteiraResponse response = client.associa(cartao.getId(), request);
 
-        Carteira carteira = response.converte(request.getCarteira(), cartao);
-        cartao.addCarteira(carteira);
+            Carteira carteira = response.converte(request.getCarteira(), cartao);
+            cartao.addCarteira(carteira);
 
-        entityManager.persist(carteira);
+            entityManager.persist(carteira);
 
-        URI uri = uriBuilder
-                .path("/api/cartoes/{id}/carteiras/{idCarteira}")
-                .buildAndExpand(cartao.getId(), carteira.getId())
-                .toUri();
+            URI uri = uriBuilder
+                    .path("/api/cartoes/{id}/carteiras/{idCarteira}")
+                    .buildAndExpand(cartao.getId(), carteira.getId())
+                    .toUri();
 
-        return ResponseEntity.created(uri).build();
+            return ResponseEntity.created(uri).build();
+        } catch (FeignException.FeignClientException.UnprocessableEntity ex) {
+            ex.printStackTrace();
+            throw new ApiError(HttpStatus.UNPROCESSABLE_ENTITY, "Não foi possível processar o pedido.");
+        } catch (FeignException.FeignClientException ex) {
+            ex.printStackTrace();
+            throw new ApiError(HttpStatus.INTERNAL_SERVER_ERROR, "Erro no processamento do pedido, por favor tente novamente mais tarde.");
+        }
     }
 }
