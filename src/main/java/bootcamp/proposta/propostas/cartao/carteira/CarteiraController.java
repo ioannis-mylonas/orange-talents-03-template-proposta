@@ -2,7 +2,6 @@ package bootcamp.proposta.propostas.cartao.carteira;
 
 import bootcamp.proposta.propostas.cartao.Cartao;
 import bootcamp.proposta.propostas.cartao.CartaoClient;
-import bootcamp.proposta.propostas.cartao.CartaoRepository;
 import feign.FeignException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,22 +11,22 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.net.URI;
-import java.util.Optional;
 
 @RestController
 public class CarteiraController {
     private final CarteiraRepository repository;
-    private final CartaoRepository cartaoRepository;
+    private final EntityManager entityManager;
     private final CartaoClient client;
 
     public CarteiraController(CarteiraRepository repository,
-                              CartaoRepository cartaoRepository,
+                              EntityManager entityManager,
                               CartaoClient client) {
         this.repository = repository;
-        this.cartaoRepository = cartaoRepository;
+        this.entityManager = entityManager;
         this.client = client;
     }
 
@@ -37,16 +36,16 @@ public class CarteiraController {
                                      @RequestBody @Valid ClientCarteiraRequest request,
                                      UriComponentsBuilder uriBuilder) {
 
-        Optional<Cartao> cartao = cartaoRepository.findById(id);
-        if (cartao.isEmpty())
+        Cartao cartao = entityManager.find(Cartao.class, id);
+        if (cartao == null)
             return ResponseEntity.notFound().build();
 
-        if (repository.existsByCartaoAndCarteira(cartao.get(), request.getCarteira()))
+        if (repository.existsByCartaoAndCarteira(cartao, request.getCarteira()))
             return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
 
         try {
             ClientCarteiraResponse response = client.associa(id, request);
-            return processa(response, request, cartao.get(), uriBuilder);
+            return processa(response, request, cartao, uriBuilder);
         } catch (FeignException.FeignClientException.UnprocessableEntity ex) {
             ex.printStackTrace();
             return ResponseEntity.unprocessableEntity().build();
@@ -61,13 +60,14 @@ public class CarteiraController {
                                       Cartao cartao,
                                       UriComponentsBuilder uriBuilder) {
 
-        Carteira associacao = response.converte(request.getCarteira(), cartao);
-        cartao.addCarteira(associacao);
-        cartaoRepository.save(cartao);
+        Carteira carteira = response.converte(request.getCarteira(), cartao);
+        cartao.addCarteira(carteira);
+
+        entityManager.persist(carteira);
 
         URI uri = uriBuilder
                 .path("/api/cartoes/{id}/carteiras/{idCarteira}")
-                .buildAndExpand(cartao.getId(), associacao.getId())
+                .buildAndExpand(cartao.getId(), carteira.getId())
                 .toUri();
 
         return ResponseEntity.created(uri).build();

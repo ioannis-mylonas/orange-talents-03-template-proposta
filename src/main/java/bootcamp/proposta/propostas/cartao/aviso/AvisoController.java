@@ -7,11 +7,13 @@ import feign.FeignException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
+import java.net.URI;
 
 @RestController
 public class AvisoController {
@@ -30,7 +32,7 @@ public class AvisoController {
     public ResponseEntity<?> avisa(@PathVariable(name = "id") String id,
                                    @RequestBody @Valid AvisoRequest viagemRequest,
                                    @RequestHeader("User-Agent") String userAgent,
-                                   HttpServletRequest request) {
+                                   HttpServletRequest request, UriComponentsBuilder uriBuilder) {
 
         Cartao cartao = entityManager.find(Cartao.class, id);
         if (cartao == null)
@@ -40,8 +42,8 @@ public class AvisoController {
         Aviso aviso = viagemRequest.converte(cartao, ip, userAgent);
 
         try {
-            avisaViagem(aviso, cartao);
-            return ResponseEntity.ok().build();
+            URI uri = avisaViagem(aviso, cartao, uriBuilder);
+            return ResponseEntity.created(uri).build();
         } catch (FeignException.UnprocessableEntity ex) {
             ex.printStackTrace();
             return ResponseEntity.unprocessableEntity().build();
@@ -51,11 +53,16 @@ public class AvisoController {
         }
     }
 
-    private void avisaViagem(Aviso aviso, Cartao cartao) throws FeignException.FeignClientException {
+    private URI avisaViagem(Aviso aviso, Cartao cartao, UriComponentsBuilder uriBuilder) throws FeignException.FeignClientException {
         client.avisaViagem(cartao.getId(),
                 new ClientAvisoViagemRequest(aviso.getDestino(), aviso.getTermino()));
 
         cartao.addAviso(aviso);
-        entityManager.merge(cartao);
+        entityManager.persist(aviso);
+
+        return uriBuilder
+                .path("/api/cartoes/{id}/avisos/{idAviso}")
+                .buildAndExpand(cartao.getId(), aviso.getId())
+                .toUri();
     }
 }

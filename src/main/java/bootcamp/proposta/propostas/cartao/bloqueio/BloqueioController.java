@@ -9,10 +9,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
+import java.net.URI;
 
 @RestController
 public class BloqueioController {
@@ -28,7 +30,7 @@ public class BloqueioController {
     @Transactional
     public ResponseEntity<?> bloqueia(@PathVariable(name = "id") String cartaoId,
                                       @RequestHeader("User-Agent") String userAgent,
-                                      HttpServletRequest request) {
+                                      HttpServletRequest request, UriComponentsBuilder uriBuilder) {
 
         Cartao cartao = entityManager.find(Cartao.class, cartaoId);
         if (cartao == null)
@@ -37,10 +39,11 @@ public class BloqueioController {
         if (!cartao.getBloqueios().isEmpty())
             return ResponseEntity.unprocessableEntity().build();
 
-        return processa(cartao, request, userAgent);
+        return processa(cartao, request, userAgent, uriBuilder);
     }
 
-    private ResponseEntity<?> processa(Cartao cartao, HttpServletRequest request, String userAgent) {
+    private ResponseEntity<?> processa(Cartao cartao, HttpServletRequest request,
+                                       String userAgent, UriComponentsBuilder uriBuilder) {
         try {
             ClientBloqueioResponse response = client.bloqueia(cartao.getId(), new ClientBloqueioRequest());
 
@@ -48,8 +51,14 @@ public class BloqueioController {
             cartao.bloqueia(bloqueio);
             cartao.mudaEstado(response.getResultado());
 
-            entityManager.merge(cartao);
-            return ResponseEntity.ok().build();
+            entityManager.persist(bloqueio);
+
+            URI uri = uriBuilder
+                    .path("/api/cartoes/{id}/bloqueios/{idBloqueio}")
+                    .buildAndExpand(cartao.getId(), bloqueio.getId())
+                    .toUri();
+
+            return ResponseEntity.created(uri).build();
         } catch(FeignException.UnprocessableEntity ex) {
             ex.printStackTrace();
             return ResponseEntity.unprocessableEntity().build();
