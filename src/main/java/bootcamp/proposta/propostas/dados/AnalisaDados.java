@@ -15,15 +15,12 @@ import java.util.List;
 @Component
 public class AnalisaDados {
     private final AnaliseClient client;
-    private final Tracer tracer;
     private final PropostaRepository propostaRepository;
 
     public AnalisaDados(AnaliseClient client,
-                        Tracer tracer,
                         PropostaRepository propostaRepository) {
 
         this.client = client;
-        this.tracer = tracer;
         this.propostaRepository = propostaRepository;
     }
 
@@ -31,11 +28,8 @@ public class AnalisaDados {
     @Transactional
     public void analisa() {
         List<Proposta> propostas = propostaRepository.findByEstadoProposta(EstadoProposta.ANALISE);
-        Span span = tracer.activeSpan();
 
         for (Proposta proposta : propostas) {
-            span.setTag("proposta", proposta.getId());
-            span.log("Consultando proposta...");
 
             ElegibilidadeDados elegibilidade;
             AnaliseRequest request = new AnaliseRequest(proposta);
@@ -48,8 +42,6 @@ public class AnalisaDados {
             }
 
             proposta.atualiza(elegibilidade.getEstadoProposta());
-
-            span.log("Consulta de proposta finalizada.");
         }
     }
 }
