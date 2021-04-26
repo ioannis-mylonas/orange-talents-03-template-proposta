@@ -1,5 +1,6 @@
 package bootcamp.proposta.propostas.cartao.carteira;
 
 public enum CarteiraEnum {
-    PAYPAL
+    PAYPAL,
+    SAMSUNG_PAY
 }
