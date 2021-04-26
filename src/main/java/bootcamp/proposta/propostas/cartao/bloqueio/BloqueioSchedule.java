@@ -4,7 +4,6 @@ import bootcamp.proposta.propostas.cartao.Cartao;
 import bootcamp.proposta.propostas.cartao.CartaoClient;
 import bootcamp.proposta.propostas.cartao.CartaoEstado;
 import bootcamp.proposta.propostas.cartao.CartaoRepository;
-import feign.FeignException;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 

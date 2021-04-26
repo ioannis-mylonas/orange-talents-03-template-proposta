@@ -1,10 +1,12 @@
 package bootcamp.proposta.propostas.cartao.carteira;
 
 import bootcamp.proposta.exceptions.ApiError;
+import bootcamp.proposta.exceptions.InternalApiError;
+import bootcamp.proposta.exceptions.NotFoundApiError;
+import bootcamp.proposta.exceptions.UnprocessableApiError;
 import bootcamp.proposta.propostas.cartao.Cartao;
 import bootcamp.proposta.propostas.cartao.CartaoClient;
 import feign.FeignException;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -38,11 +40,10 @@ public class CarteiraController {
                                      UriComponentsBuilder uriBuilder) {
 
         Cartao cartao = entityManager.find(Cartao.class, id);
-        if (cartao == null)
-            return ResponseEntity.notFound().build();
+        if (cartao == null) throw new NotFoundApiError();
 
         if (repository.existsByCartaoAndCarteira(cartao, request.getCarteira()))
-            throw new ApiError(HttpStatus.UNPROCESSABLE_ENTITY, "Não foi possível processar o pedido.");
+            throw new UnprocessableApiError();
 
         return processa(request, cartao, uriBuilder);
     }
@@ -66,10 +67,10 @@ public class CarteiraController {
             return ResponseEntity.created(uri).build();
         } catch (FeignException.FeignClientException.UnprocessableEntity ex) {
             ex.printStackTrace();
-            throw new ApiError(HttpStatus.UNPROCESSABLE_ENTITY, "Não foi possível processar o pedido.");
+            throw new UnprocessableApiError();
         } catch (FeignException.FeignClientException ex) {
             ex.printStackTrace();
-            throw new ApiError(HttpStatus.INTERNAL_SERVER_ERROR, "Erro no processamento do pedido, por favor tente novamente mais tarde.");
+            throw new InternalApiError();
         }
     }
 }

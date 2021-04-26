@@ -1,10 +1,10 @@
 package bootcamp.proposta.propostas;
 
-import bootcamp.proposta.exceptions.ApiError;
+import bootcamp.proposta.exceptions.NotFoundApiError;
+import bootcamp.proposta.exceptions.UnprocessableApiError;
 import bootcamp.proposta.propostas.events.PropostaEventPublisher;
 import io.opentracing.Span;
 import io.opentracing.Tracer;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -37,8 +37,7 @@ public class PropostaController {
         span.log("Cadastrando proposta...");
 
         if (propostaRepository.existsByDocumento(request.getDocumento()))
-            throw new ApiError(HttpStatus.UNPROCESSABLE_ENTITY,
-                    "Não foi possível processar o pedido.");
+            throw new UnprocessableApiError();
 
         Proposta proposta = request.converte();
         proposta = propostaRepository.save(proposta);
@@ -55,7 +54,7 @@ public class PropostaController {
     @GetMapping("/{id}")
     public ResponseEntity<PropostaResponse> detalhes(@PathVariable(name = "id") Long id) {
         Optional<Proposta> proposta = propostaRepository.findById(id);
-        if (proposta.isEmpty()) return ResponseEntity.notFound().build();
+        if (proposta.isEmpty()) throw new NotFoundApiError();
 
         PropostaResponse response = new PropostaResponse(proposta.get());
         return ResponseEntity.ok(response);

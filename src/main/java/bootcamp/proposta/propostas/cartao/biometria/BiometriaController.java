@@ -1,5 +1,6 @@
 package bootcamp.proposta.propostas.cartao.biometria;
 
+import bootcamp.proposta.exceptions.NotFoundApiError;
 import bootcamp.proposta.propostas.cartao.Cartao;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +27,7 @@ public class BiometriaController {
                                       UriComponentsBuilder uriBuilder) {
 
         Cartao cartao = entityManager.find(Cartao.class, cartaoId);
-        if (cartao == null) return ResponseEntity.notFound().build();
+        if (cartao == null) throw new NotFoundApiError();
 
         Biometria biometria = request.converte();
         entityManager.persist(biometria);
@@ -49,7 +50,7 @@ public class BiometriaController {
         Cartao cartao = entityManager.find(Cartao.class, cartaoId);
         Biometria biometria = entityManager.find(Biometria.class, id);
         if (biometria == null || cartao == null)
-            return ResponseEntity.notFound().build();
+            throw new NotFoundApiError();
 
         return ResponseEntity.ok(biometria);
     }

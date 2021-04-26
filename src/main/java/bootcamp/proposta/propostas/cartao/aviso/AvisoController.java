@@ -1,11 +1,12 @@
 package bootcamp.proposta.propostas.cartao.aviso;
 
-import bootcamp.proposta.exceptions.ApiError;
+import bootcamp.proposta.exceptions.InternalApiError;
+import bootcamp.proposta.exceptions.NotFoundApiError;
+import bootcamp.proposta.exceptions.UnprocessableApiError;
 import bootcamp.proposta.propostas.cartao.Cartao;
 import bootcamp.proposta.propostas.cartao.CartaoClient;
 import bootcamp.proposta.propostas.cartao.aviso.notificacao.ClientAvisoViagemRequest;
 import feign.FeignException;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -36,8 +37,7 @@ public class AvisoController {
                                    HttpServletRequest request, UriComponentsBuilder uriBuilder) {
 
         Cartao cartao = entityManager.find(Cartao.class, id);
-        if (cartao == null)
-            return ResponseEntity.notFound().build();
+        if (cartao == null) throw new NotFoundApiError();
 
         String ip = request.getRemoteAddr();
         Aviso aviso = viagemRequest.converte(cartao, ip, userAgent);
@@ -47,10 +47,10 @@ public class AvisoController {
             return ResponseEntity.created(uri).build();
         } catch (FeignException.UnprocessableEntity ex) {
             ex.printStackTrace();
-            throw new ApiError(HttpStatus.UNPROCESSABLE_ENTITY, "Não foi possível processar o pedido.");
+            throw new UnprocessableApiError();
         } catch (FeignException.FeignClientException ex) {
             ex.printStackTrace();
-            throw new ApiError(HttpStatus.INTERNAL_SERVER_ERROR, "Erro no processamento do pedido, por favor tente novamente mais tarde.");
+            throw new InternalApiError();
         }
     }
 
