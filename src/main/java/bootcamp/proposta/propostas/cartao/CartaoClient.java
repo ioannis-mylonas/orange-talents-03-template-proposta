@@ -4,6 +4,8 @@ import bootcamp.proposta.propostas.cartao.aviso.notificacao.ClientAvisoViagemReq
 import bootcamp.proposta.propostas.cartao.aviso.notificacao.ClientAvisoViagemResponse;
 import bootcamp.proposta.propostas.cartao.bloqueio.ClienteBloqueioRequest;
 import bootcamp.proposta.propostas.cartao.bloqueio.ClienteBloqueioResponse;
+import bootcamp.proposta.propostas.cartao.carteira.ClientCarteiraRequest;
+import bootcamp.proposta.propostas.cartao.carteira.ClientCarteiraResponse;
 import bootcamp.proposta.propostas.cartao.request.CartaoServiceResponse;
 import io.opentracing.contrib.spring.cloud.feign.FeignTracingAutoConfiguration;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -24,4 +26,8 @@ public interface CartaoClient {
     @PostMapping("/api/cartoes/{id}/avisos")
     ClientAvisoViagemResponse avisaViagem(@PathVariable(name = "id") String id,
                                           @RequestBody @Valid ClientAvisoViagemRequest request);
+
+    @PostMapping("/api/cartoes/{id}/carteiras")
+    ClientCarteiraResponse associa(@PathVariable(name = "id") String id,
+                                   @RequestBody @Valid ClientCarteiraRequest request);
 }

@@ -3,6 +3,7 @@ package bootcamp.proposta.propostas.cartao;
 import bootcamp.proposta.propostas.cartao.aviso.AvisoViagem;
 import bootcamp.proposta.propostas.cartao.biometria.Biometria;
 import bootcamp.proposta.propostas.cartao.bloqueio.ClienteBloqueio;
+import bootcamp.proposta.propostas.cartao.carteira.AssociacaoCarteira;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -46,6 +47,9 @@ public class Cartao {
 
     @OneToMany(cascade = CascadeType.MERGE, mappedBy = "cartao")
     private Set<AvisoViagem> avisosViagem = new HashSet<>();
+
+    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "cartao")
+    private Set<AssociacaoCarteira> associacoesCarteira = new HashSet<>();
 
     @Enumerated(EnumType.STRING)
     private CartaoEstado estado;
@@ -122,6 +126,18 @@ public class Cartao {
         return bloqueiosCliente;
     }
 
+    public Set<AvisoViagem> getAvisosViagem() {
+        return avisosViagem;
+    }
+
+    public Set<AssociacaoCarteira> getAssociacoesCarteira() {
+        return associacoesCarteira;
+    }
+
+    public CartaoEstado getEstado() {
+        return estado;
+    }
+
     public void addBiometria(Biometria biometria) {
         biometrias.add(biometria);
     }
@@ -136,5 +152,9 @@ public class Cartao {
 
     public void mudaEstado(CartaoEstado estado) {
         this.estado = estado;
+    }
+
+    public void addAssociacaoCarteira(AssociacaoCarteira associacao) {
+        this.associacoesCarteira.add(associacao);
     }
 }
