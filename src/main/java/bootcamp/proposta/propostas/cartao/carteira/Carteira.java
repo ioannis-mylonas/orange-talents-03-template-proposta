@@ -7,7 +7,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @Entity
-public class AssociacaoCarteira {
+public class Carteira {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -25,9 +25,9 @@ public class AssociacaoCarteira {
     /**
      * @Deprecated Para uso do Hibernate
      */
-    public AssociacaoCarteira() {}
+    public Carteira() {}
 
-    public AssociacaoCarteira(@NotBlank String idCarteira, @NotNull CarteiraEnum carteira, @NotNull Cartao cartao) {
+    public Carteira(@NotBlank String idCarteira, @NotNull CarteiraEnum carteira, @NotNull Cartao cartao) {
         this.idCarteira = idCarteira;
         this.carteira = carteira;
         this.cartao = cartao;

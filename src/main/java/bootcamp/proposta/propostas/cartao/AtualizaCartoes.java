@@ -4,6 +4,7 @@ import bootcamp.proposta.propostas.EstadoProposta;
 import bootcamp.proposta.propostas.Proposta;
 import bootcamp.proposta.propostas.PropostaRepository;
 import bootcamp.proposta.propostas.cartao.request.CartaoServiceResponse;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -14,6 +15,11 @@ import java.util.List;
 public class AtualizaCartoes {
     private final CartaoClient client;
     private final PropostaRepository propostaRepository;
+
+    @Value("${academy.cartoes.url}")
+    private String cartoesUrl;
+
+    private final String defaultUserAgent = "CartoesService";
 
     public AtualizaCartoes(CartaoClient client,
                            PropostaRepository propostaRepository) {
@@ -35,7 +41,7 @@ public class AtualizaCartoes {
 
         for (Proposta proposta : propostas) {
             CartaoServiceResponse response = client.consulta(proposta.getId());
-            if (response != null) saveCartao(proposta, response.converte());
+            if (response != null) saveCartao(proposta, response.converte(cartoesUrl, defaultUserAgent));
         }
     }
 }

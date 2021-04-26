@@ -18,7 +18,7 @@ public class ClientCarteiraResponse {
         return id;
     }
 
-    public AssociacaoCarteira converte(CarteiraEnum carteira, Cartao cartao) {
-        return new AssociacaoCarteira(id, carteira, cartao);
+    public Carteira converte(CarteiraEnum carteira, Cartao cartao) {
+        return new Carteira(id, carteira, cartao);
     }
 }

@@ -12,7 +12,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-public class AvisoViagem {
+public class Aviso {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -39,13 +39,13 @@ public class AvisoViagem {
     /**
      * @Deprecated Para uso do Hibernate
      */
-    public AvisoViagem() {}
+    public Aviso() {}
 
-    public AvisoViagem(@NotNull Cartao cartao,
-                       @NotBlank String destino,
-                       @FutureOrPresent @NotNull LocalDate termino,
-                       @NotBlank String ip,
-                       @NotBlank String userAgent) {
+    public Aviso(@NotNull Cartao cartao,
+                 @NotBlank String destino,
+                 @FutureOrPresent @NotNull LocalDate termino,
+                 @NotBlank String ip,
+                 @NotBlank String userAgent) {
 
         this.cartao = cartao;
         this.destino = destino;

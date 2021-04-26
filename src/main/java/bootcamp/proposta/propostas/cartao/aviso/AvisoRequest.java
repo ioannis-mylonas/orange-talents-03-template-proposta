@@ -9,7 +9,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
-public class AvisoViagemRequest {
+public class AvisoRequest {
     @JsonProperty
     @NotBlank
     private String destino;
@@ -29,7 +29,7 @@ public class AvisoViagemRequest {
         this.termino = termino;
     }
 
-    public AvisoViagem converte(Cartao cartao, String ip, String userAgent) {
-        return new AvisoViagem(cartao, destino, termino, ip, userAgent);
+    public Aviso converte(Cartao cartao, String ip, String userAgent) {
+        return new Aviso(cartao, destino, termino, ip, userAgent);
     }
 }

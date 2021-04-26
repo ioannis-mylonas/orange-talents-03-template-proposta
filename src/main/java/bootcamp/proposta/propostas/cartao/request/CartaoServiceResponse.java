@@ -1,6 +1,9 @@
 package bootcamp.proposta.propostas.cartao.request;
 
 import bootcamp.proposta.propostas.cartao.*;
+import bootcamp.proposta.propostas.cartao.aviso.Aviso;
+import bootcamp.proposta.propostas.cartao.bloqueio.Bloqueio;
+import bootcamp.proposta.propostas.cartao.carteira.Carteira;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.LocalDateTime;
@@ -61,22 +64,7 @@ public class CartaoServiceResponse {
         this.idProposta = idProposta;
     }
 
-    public Cartao converte() {
-        List<Bloqueio> bloqueios = this.bloqueios == null ?
-                null : this.bloqueios.stream()
-                .map(BloqueioResponse::converte)
-                .collect(Collectors.toList());
-
-        List<Aviso> avisos = this.avisos == null ?
-                null : this.avisos.stream()
-                .map(AvisoResponse::converte)
-                .collect(Collectors.toList());
-
-        List<Carteira> carteiras = this.carteiras == null ?
-                null : this.carteiras.stream()
-                .map(CarteiraResponse::converte)
-                .collect(Collectors.toList());
-
+    public Cartao converte(String ip, String userAgent) {
         List<Parcela> parcelas = this.parcelas == null ?
                 null : this.parcelas.stream()
                 .map(ParcelaResponse::converte)
@@ -88,8 +76,28 @@ public class CartaoServiceResponse {
         Vencimento vencimento = this.vencimento == null ?
                 null : this.vencimento.converte();
 
-        return new Cartao(id, emitidoEm, titular,
-                bloqueios, avisos, carteiras, parcelas,
+        Cartao cartao = new Cartao(id, emitidoEm, titular, parcelas,
                 limite, renegociacao, vencimento, CartaoEstado.NORMAL);
+
+        List<Bloqueio> bloqueios = this.bloqueios == null ?
+                null : this.bloqueios.stream()
+                .map(i -> i.converte(cartao, ip))
+                .collect(Collectors.toList());
+
+        List<Aviso> avisos = this.avisos == null ?
+                null : this.avisos.stream()
+                .map(i -> i.converte(cartao, ip, userAgent))
+                .collect(Collectors.toList());
+
+        List<Carteira> carteiras = this.carteiras == null ?
+                null : this.carteiras.stream()
+                .map(i -> i.converte(cartao))
+                .collect(Collectors.toList());
+
+        cartao.AddAllBloqueio(bloqueios);
+        cartao.addAllAviso(avisos);
+        cartao.addAllCarteira(carteiras);
+
+        return cartao;
     }
 }

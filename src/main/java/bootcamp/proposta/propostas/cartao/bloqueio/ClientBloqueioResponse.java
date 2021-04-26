@@ -3,7 +3,7 @@ package bootcamp.proposta.propostas.cartao.bloqueio;
 import bootcamp.proposta.propostas.cartao.CartaoEstado;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class ClienteBloqueioResponse {
+public class ClientBloqueioResponse {
     @JsonProperty
     private CartaoEstado resultado;
 

@@ -1,6 +1,7 @@
 package bootcamp.proposta.propostas.cartao.request;
 
-import bootcamp.proposta.propostas.cartao.Aviso;
+import bootcamp.proposta.propostas.cartao.Cartao;
+import bootcamp.proposta.propostas.cartao.aviso.Aviso;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.LocalDate;
@@ -17,7 +18,7 @@ public class AvisoResponse {
         this.destino = destino;
     }
 
-    public Aviso converte() {
-        return new Aviso(validoAte, destino);
+    public Aviso converte(Cartao cartao, String ip, String userAgent) {
+        return new Aviso(cartao, destino, validoAte, ip, userAgent);
     }
 }

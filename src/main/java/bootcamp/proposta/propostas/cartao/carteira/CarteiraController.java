@@ -18,14 +18,14 @@ import java.net.URI;
 import java.util.Optional;
 
 @RestController
-public class AssociacaoCarteiraController {
-    private final AssociacaoCarteiraRepository repository;
+public class CarteiraController {
+    private final CarteiraRepository repository;
     private final CartaoRepository cartaoRepository;
     private final CartaoClient client;
 
-    public AssociacaoCarteiraController(AssociacaoCarteiraRepository repository,
-                                        CartaoRepository cartaoRepository,
-                                        CartaoClient client) {
+    public CarteiraController(CarteiraRepository repository,
+                              CartaoRepository cartaoRepository,
+                              CartaoClient client) {
         this.repository = repository;
         this.cartaoRepository = cartaoRepository;
         this.client = client;
@@ -47,6 +47,9 @@ public class AssociacaoCarteiraController {
         try {
             ClientCarteiraResponse response = client.associa(id, request);
             return processa(response, request, cartao.get(), uriBuilder);
+        } catch (FeignException.FeignClientException.UnprocessableEntity ex) {
+            ex.printStackTrace();
+            return ResponseEntity.unprocessableEntity().build();
         } catch (FeignException.FeignClientException ex) {
             ex.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -58,8 +61,8 @@ public class AssociacaoCarteiraController {
                                       Cartao cartao,
                                       UriComponentsBuilder uriBuilder) {
 
-        AssociacaoCarteira associacao = response.converte(request.getCarteira(), cartao);
-        cartao.addAssociacaoCarteira(associacao);
+        Carteira associacao = response.converte(request.getCarteira(), cartao);
+        cartao.addCarteira(associacao);
         cartaoRepository.save(cartao);
 
         URI uri = uriBuilder

@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Entity
-public class ClienteBloqueio {
+public class Bloqueio {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -28,9 +28,9 @@ public class ClienteBloqueio {
     /**
      * @Deprecated Para uso do Hibernate
      */
-    public ClienteBloqueio() {}
+    public Bloqueio() {}
 
-    public ClienteBloqueio(Cartao cartao, @NotBlank String ip, @NotNull String userAgent) {
+    public Bloqueio(Cartao cartao, @NotBlank String ip, @NotNull String userAgent) {
         this.cartao = cartao;
         this.ip = ip;
         this.userAgent = userAgent;

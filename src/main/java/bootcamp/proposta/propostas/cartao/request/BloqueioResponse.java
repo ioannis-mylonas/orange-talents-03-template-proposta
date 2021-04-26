@@ -1,6 +1,7 @@
 package bootcamp.proposta.propostas.cartao.request;
 
-import bootcamp.proposta.propostas.cartao.Bloqueio;
+import bootcamp.proposta.propostas.cartao.Cartao;
+import bootcamp.proposta.propostas.cartao.bloqueio.Bloqueio;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.LocalDateTime;
@@ -25,7 +26,7 @@ public class BloqueioResponse {
         this.ativo = ativo;
     }
 
-    public Bloqueio converte() {
-        return new Bloqueio(id, bloqueadoEm, sistemaResponsavel, ativo);
+    public Bloqueio converte(Cartao cartao, String ip) {
+        return new Bloqueio(cartao, ip, sistemaResponsavel);
     }
 }

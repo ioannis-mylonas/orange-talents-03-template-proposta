@@ -12,11 +12,11 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 @Component
-public class ClienteBloqueioSchedule {
+public class BloqueioSchedule {
     private final CartaoClient client;
     private final CartaoRepository repository;
 
-    public ClienteBloqueioSchedule(CartaoClient client, CartaoRepository repository) {
+    public BloqueioSchedule(CartaoClient client, CartaoRepository repository) {
         this.client = client;
         this.repository = repository;
     }
@@ -25,15 +25,9 @@ public class ClienteBloqueioSchedule {
     @Transactional
     public void bloqueia() {
         List<Cartao> cartoes = repository
-                .findByEstadoAndBloqueiosClienteNotNull(CartaoEstado.NORMAL);
+                .findByEstadoAndBloqueiosNotNull(CartaoEstado.NORMAL);
 
         for (Cartao cartao : cartoes) {
-            try {
-                ClienteBloqueioResponse response = client.bloqueia(cartao.getId(), new ClienteBloqueioRequest());
-                cartao.mudaEstado(response.getResultado());
-            } catch (FeignException.FeignClientException ex) {
-                ex.printStackTrace();
-            }
         }
     }
 }

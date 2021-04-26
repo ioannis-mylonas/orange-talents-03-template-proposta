@@ -1,15 +1,13 @@
 package bootcamp.proposta.propostas.cartao;
 
-import bootcamp.proposta.propostas.cartao.aviso.AvisoViagem;
+import bootcamp.proposta.propostas.cartao.aviso.Aviso;
 import bootcamp.proposta.propostas.cartao.biometria.Biometria;
-import bootcamp.proposta.propostas.cartao.bloqueio.ClienteBloqueio;
-import bootcamp.proposta.propostas.cartao.carteira.AssociacaoCarteira;
+import bootcamp.proposta.propostas.cartao.bloqueio.Bloqueio;
+import bootcamp.proposta.propostas.cartao.carteira.Carteira;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 public class Cartao {
@@ -19,15 +17,12 @@ public class Cartao {
     private String titular;
     private int limite;
 
-    @OneToMany(cascade = CascadeType.MERGE)
-    @JoinColumn
-    private List<Bloqueio> bloqueios;
-    @OneToMany(cascade = CascadeType.MERGE)
-    @JoinColumn
-    private List<Aviso> avisos;
-    @OneToMany(cascade = CascadeType.MERGE)
-    @JoinColumn
-    private List<Carteira> carteiras;
+    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "cartao")
+    private List<Bloqueio> bloqueios = new ArrayList<>();
+    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "cartao")
+    private List<Aviso> avisos = new ArrayList<>();
+    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "cartao")
+    private List<Carteira> carteiras = new ArrayList<>();
     @OneToMany(cascade = CascadeType.MERGE)
     @JoinColumn
     private List<Parcela> parcelas;
@@ -42,15 +37,6 @@ public class Cartao {
     @JoinColumn
     private Set<Biometria> biometrias = new HashSet<>();
 
-    @OneToOne(cascade = CascadeType.MERGE, mappedBy = "cartao")
-    private ClienteBloqueio bloqueiosCliente;
-
-    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "cartao")
-    private Set<AvisoViagem> avisosViagem = new HashSet<>();
-
-    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "cartao")
-    private Set<AssociacaoCarteira> associacoesCarteira = new HashSet<>();
-
     @Enumerated(EnumType.STRING)
     private CartaoEstado estado;
 
@@ -59,18 +45,13 @@ public class Cartao {
      */
     public Cartao() {}
 
-    public Cartao(String id, LocalDateTime emitidoEm, String titular,
-                  List<Bloqueio> bloqueios, List<Aviso> avisos,
-                  List<Carteira> carteiras, List<Parcela> parcelas,
+    public Cartao(String id, LocalDateTime emitidoEm, String titular, List<Parcela> parcelas,
                   int limite, Renegociacao renegociacao, Vencimento vencimento,
                   CartaoEstado estado) {
 
         this.id = id;
         this.emitidoEm = emitidoEm;
         this.titular = titular;
-        this.bloqueios = bloqueios;
-        this.avisos = avisos;
-        this.carteiras = carteiras;
         this.parcelas = parcelas;
         this.limite = limite;
         this.renegociacao = renegociacao;
@@ -122,18 +103,6 @@ public class Cartao {
         return biometrias;
     }
 
-    public ClienteBloqueio getBloqueiosCliente() {
-        return bloqueiosCliente;
-    }
-
-    public Set<AvisoViagem> getAvisosViagem() {
-        return avisosViagem;
-    }
-
-    public Set<AssociacaoCarteira> getAssociacoesCarteira() {
-        return associacoesCarteira;
-    }
-
     public CartaoEstado getEstado() {
         return estado;
     }
@@ -142,19 +111,31 @@ public class Cartao {
         biometrias.add(biometria);
     }
 
-    public void addAvisoViagem(AvisoViagem avisoViagem) {
-        this.avisosViagem.add(avisoViagem);
+    public void addAviso(Aviso aviso) {
+        this.avisos.add(aviso);
     }
 
-    public void bloqueia(ClienteBloqueio bloqueio) {
-        this.bloqueiosCliente = bloqueio;
+    public void addAllAviso(Collection<Aviso> avisos) {
+        this.avisos.addAll(avisos);
+    }
+
+    public void bloqueia(Bloqueio bloqueio) {
+        this.bloqueios.add(bloqueio);
+    }
+
+    public void AddAllBloqueio(Collection<Bloqueio> bloqueios) {
+        this.bloqueios.addAll(bloqueios);
     }
 
     public void mudaEstado(CartaoEstado estado) {
         this.estado = estado;
     }
 
-    public void addAssociacaoCarteira(AssociacaoCarteira associacao) {
-        this.associacoesCarteira.add(associacao);
+    public void addCarteira(Carteira carteira) {
+        this.carteiras.add(carteira);
+    }
+
+    public void addAllCarteira(Collection<Carteira> carteiras) {
+        this.carteiras.addAll(carteiras);
     }
 }
