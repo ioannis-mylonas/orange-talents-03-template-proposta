@@ -41,7 +41,7 @@ public class AtualizaCartoes {
 
         for (Proposta proposta : propostas) {
             CartaoServiceResponse response = client.consulta(proposta.getId());
-            if (response != null) saveCartao(proposta, response.converte(cartoesUrl, defaultUserAgent));
+            saveCartao(proposta, response.converte(cartoesUrl, defaultUserAgent));
         }
     }
 }
