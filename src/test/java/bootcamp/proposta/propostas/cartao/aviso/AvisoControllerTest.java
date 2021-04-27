@@ -41,13 +41,14 @@ class AvisoControllerTest {
 
     private final ObjectMapper mapper = new ObjectMapper();
 
+    private final Cartao cartao = new Cartao("idcartao", LocalDateTime.now(),
+            "Titular", List.of(),
+            500, null, new Vencimento(),
+            CartaoEstado.NORMAL);
+
     @Test
     @WithMockUser(authorities = {"SCOPE_cartoes:write"})
     public void testPostSucesso() throws Exception {
-        Cartao cartao = new Cartao("idcartao", LocalDateTime.now(),
-                "Titular", List.of(),
-                500, null, new Vencimento(),
-                CartaoEstado.NORMAL);
         entityManager.persist(cartao);
 
         ObjectNode request = mapper.createObjectNode();
@@ -67,10 +68,6 @@ class AvisoControllerTest {
     @Test
     @WithMockUser(authorities = {"SCOPE_cartoes:write"})
     public void testPostBadRequest() throws Exception {
-        Cartao cartao = new Cartao("idcartao", LocalDateTime.now(),
-                "Titular", List.of(),
-                500, null, new Vencimento(),
-                CartaoEstado.NORMAL);
         entityManager.persist(cartao);
 
         ObjectNode request = mapper.createObjectNode();
