@@ -1,6 +1,6 @@
 package bootcamp.proposta.propostas;
 
-import bootcamp.proposta.validators.Documento;
+import bootcamp.proposta.validators.CpfOrCnpj;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.validation.constraints.DecimalMin;
@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 
 public class PropostaRequest {
     @NotBlank
-    @Documento
+    @CpfOrCnpj
     @JsonProperty
     private final String documento;
 
@@ -51,7 +51,6 @@ public class PropostaRequest {
     }
 
     public Proposta converte() {
-        return new Proposta(documento, email, nome,
-                endereco, salario, EstadoProposta.ANALISE);
+        return new Proposta(documento, email, nome, endereco, salario, EstadoProposta.ANALISE);
     }
 }

@@ -17,7 +17,7 @@ import java.lang.annotation.Target;
 @Target({ ElementType.FIELD, ElementType.PARAMETER })
 @Retention(RetentionPolicy.RUNTIME)
 @CPF @CNPJ
-public @interface Documento {
+public @interface CpfOrCnpj {
     String message() default "CPF/CNPJ inválido!";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};

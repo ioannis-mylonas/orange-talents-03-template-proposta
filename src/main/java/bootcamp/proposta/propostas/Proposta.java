@@ -1,7 +1,8 @@
 package bootcamp.proposta.propostas;
 
+import bootcamp.proposta.config.security.ColumnEncryptor;
 import bootcamp.proposta.propostas.cartao.Cartao;
-import bootcamp.proposta.validators.Documento;
+import bootcamp.proposta.validators.CpfOrCnpj;
 
 import javax.persistence.*;
 import javax.validation.constraints.DecimalMin;
@@ -15,8 +16,9 @@ public class Proposta {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @NotBlank
-    @Documento
+    @CpfOrCnpj
     @Column(nullable = false)
+    @Convert(converter = ColumnEncryptor.class)
     private String documento;
     @NotBlank
     @Email

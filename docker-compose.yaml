@@ -142,8 +142,9 @@ services:
       JAEGER_SAMPLE: 1
       ANALISE_URL: http://analise:9999
       CARTOES_URL: http://contas:8888
+      AES_KEY: 9y$B&E)H@MbQeThWmZq4t7w!z%C*F-Ja
     depends_on:
-      - db
+      - postgres
       - keycloak
       - jaeger
 

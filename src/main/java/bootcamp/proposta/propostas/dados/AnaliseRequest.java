@@ -1,13 +1,13 @@
 package bootcamp.proposta.propostas.dados;
 
 import bootcamp.proposta.propostas.Proposta;
-import bootcamp.proposta.validators.Documento;
+import bootcamp.proposta.validators.CpfOrCnpj;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.validation.constraints.NotBlank;
 
 public class AnaliseRequest {
-    @Documento
+    @CpfOrCnpj
     @NotBlank
     @JsonProperty
     private final String documento;
