@@ -10,6 +10,6 @@ import org.springframework.security.oauth2.jwt.JwtDecoder;
 @TestConfiguration
 public class TestConfig {
     @MockBean(answer = Answers.RETURNS_DEEP_STUBS) private CartaoClient cartaoClient;
-    @MockBean private AnaliseClient analiseClient;
+    @MockBean(answer = Answers.RETURNS_DEEP_STUBS) private AnaliseClient analiseClient;
     @MockBean private JwtDecoder jwtDecoder;
 }
