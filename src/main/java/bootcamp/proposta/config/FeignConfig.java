@@ -6,6 +6,6 @@ import org.springframework.context.annotation.Profile;
 
 @Configuration
 @Profile("!test")
-@EnableFeignClients
+@EnableFeignClients(basePackages = "bootcamp.proposta.propostas")
 public class FeignConfig {
 }
