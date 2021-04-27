@@ -1,5 +1,8 @@
 package bootcamp.proposta.propostas;
 
+import bootcamp.proposta.config.TestConfig;
+import bootcamp.proposta.propostas.cartao.CartaoClient;
+import bootcamp.proposta.propostas.dados.AnaliseClient;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -7,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureDataJpa;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.web.servlet.MockMvc;
@@ -24,6 +29,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @SpringBootTest
 @AutoConfigureMockMvc
 @AutoConfigureDataJpa
+@Import(TestConfig.class)
 class PropostaControllerTest {
     @Autowired private EntityManager entityManager;
     @Mock private Proposta search;
@@ -32,7 +38,7 @@ class PropostaControllerTest {
     private final ObjectMapper mapper = new ObjectMapper();
 
     @Test
-    @WithMockUser(roles = {"user"})
+    @WithMockUser(authorities = {"SCOPE_propostas:write"})
     public void testaPostSucesso() throws Exception {
         PropostaRequest request = new PropostaRequest("775.907.210-42",
                 "teste@cliente.com", "Cliente",
@@ -48,7 +54,7 @@ class PropostaControllerTest {
     }
 
     @Test
-    @WithMockUser(roles = {"user"})
+    @WithMockUser(authorities = {"SCOPE_propostas:write"})
     public void testaPostFalha() throws Exception {
         PropostaRequest request = new PropostaRequest("",
                 "", "", "", BigDecimal.valueOf(0.00));
@@ -62,7 +68,7 @@ class PropostaControllerTest {
     }
 
     @Test
-    @WithMockUser(roles = {"user"})
+    @WithMockUser(authorities = {"SCOPE_propostas:read"})
     public void testaGetPropostaInexistenteNotFound() throws Exception {
         mvc.perform(get("/api/propostas/1"))
                 .andDo(MockMvcResultHandlers.print())
@@ -70,7 +76,7 @@ class PropostaControllerTest {
     }
 
     @Test
-    @WithMockUser(roles = {"user"})
+    @WithMockUser(authorities = {"SCOPE_propostas:read"})
     @Transactional @Rollback
     public void testaGetPropostaExistenteSucesso() throws Exception {
         Proposta proposta = new Proposta("296.271.840-04",
@@ -86,7 +92,7 @@ class PropostaControllerTest {
     }
 
     @Test
-    @WithMockUser(roles = {"user"})
+    @WithMockUser(authorities = {"SCOPE_propostas:write"})
     @Transactional @Rollback
     public void testaPostPropostaDocumentoExistenteUnprocessable() throws Exception {
         PropostaRequest proposta = new PropostaRequest("296.271.840-04",
